@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: django-config
 data:
-  DEBUG=1
-  DJANGO_ALLOWED_HOSTS=*
+  DEBUG: "True"
+  DJANGO_ALLOWED_HOSTS: "*"
