@@ -20,7 +20,8 @@
 
 # TODO
 - [x] Add Gunicorn
-- [ ] Add an Entrypoint with DB and Broker as optional for local dev
+- [x] Add an Entrypoint
+- [ ] Add DB and broker as optional in compose
 - [ ] Add logger
 - [ ] Add more things from here https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/
 - [x] Add statics

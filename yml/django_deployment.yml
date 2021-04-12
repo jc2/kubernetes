@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django
+  labels:
+    app: django
+spec:
+    replicas: 1
+  selector:
+    matchLabels:
+      app: django
+  template:
+    metadata:
+      labels:
+        app: django
+    spec:
+      containers:
+        - image: juancamiloceron/jc2:latest
+          name: django_api
+          envFrom:
+          - secretRef:
+              name: django-secret
+          - configMapRef:
+              name: django-config
+          ports:
+            - containerPort: 8000
+              name: django-gunicorn
