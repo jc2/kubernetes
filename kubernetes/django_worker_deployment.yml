@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: django
+  name: django-worker
   labels:
     app: django
 spec:
@@ -17,15 +17,12 @@ spec:
       containers:
         - image: juancamiloceron/django:v1
           imagePullPolicy: Never
-          name: django
+          name: django-worker
           env:
           - name: APP_MODE
-            value: "api"
+            value: "worker"
           envFrom:
           - secretRef:
               name: django-secret
           - configMapRef:
               name: django-config
-          ports:
-            - containerPort: 8000
-              name: django-gunicorn
