@@ -139,4 +139,6 @@ db.sqlite3
 .terraform/
 secret.tfvars
 
+static/
+
 kubernetes/django_secrets

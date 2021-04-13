@@ -14,7 +14,7 @@
 - `docker tag juancamiloceron/django:latest juancamiloceron/django:v1`
 -  
 
-# Run in Docker
+# Run in Docker Compose
 - `docker-compose up [--detach] [--build]`
 - `docker-compose logs -f`
 - `docker-compose down`
@@ -24,13 +24,17 @@
 - `kubectl create secret generic django-secret --from-env-file=django_secrets`
 - `kubectl describe secret django-secret`
 - `kubectl apply -f django_api_deployment.yml`
-- `kubectl get deploy django`
+- `kubectl get deploy django-api`
 - `kubectl get pod`
-- `kubectl apply -f django_service.yml`
-- `kubectl get service django`
+- `kubectl apply -f django_api_service.yml`
+- `kubectl get service django-api`
 - `kubectl get node -o wide`
 - `kubectl apply -f django_worker_deployment.yml`
 - `kubectl apply -f django_scheduler_deployment.yml`
+- `kubectl create configmap nginx-config --from-file=../config/nginx/default.conf`
+-----
+- `kubectl apply -f .`
+- `kubectl delete all --all --namespace=default`
 
 # Test
 - http://127.0.0.1:8000/
@@ -52,4 +56,3 @@
 - [ ] Add Nginx to K8s
 
 # BUGS
-- [ ] There is a problem because the service sometimes does not respond 
