@@ -1,43 +1,42 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: django-api
+  name: django-cdn
   labels:
-    app: django-api
+    app: django-cdn
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: django-api
+      app: django-cdn
   template:
     metadata:
       labels:
-        app: django-api
+        app: django-cdn
     spec:
       volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
       - name: django-statics
         persistentVolumeClaim:
           claimName: django-statics
 
       containers:
-        - image: juancamiloceron/django:v1
-          imagePullPolicy: Never
-          name: django-api
-          env:
-          - name: APP_MODE
-            value: "api"
-          envFrom:
-          - secretRef:
-              name: django-secret
-          - configMapRef:
-              name: django-config
+        - image: nginx:latest
+          imagePullPolicy: IfNotPresent
+          name: django-cdn
           ports:
             - containerPort: 8000
-              name: django-api
+              name: django-cdn
           resources:
             limits:
               memory: "256M"
               cpu: "1000m"
           volumeMounts:
+            - mountPath: /etc/nginx/conf.d/
+              name: nginx-config
+              readOnly: true
             - mountPath: /statics
               name: django-statics
+            
