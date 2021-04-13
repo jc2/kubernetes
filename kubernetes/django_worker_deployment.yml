@@ -3,16 +3,16 @@ kind: Deployment
 metadata:
   name: django-worker
   labels:
-    app: django
+    app: django-worker
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: django
+      app: django-worker
   template:
     metadata:
       labels:
-        app: django
+        app: django-worker
     spec:
       containers:
         - image: juancamiloceron/django:v1
@@ -26,3 +26,7 @@ spec:
               name: django-secret
           - configMapRef:
               name: django-config
+          resources:
+            limits:
+              memory: "256M"
+              cpu: "1000m"

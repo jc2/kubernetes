@@ -3,16 +3,16 @@ kind: Deployment
 metadata:
   name: django-api
   labels:
-    app: django
+    app: django-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: django
+      app: django-api
   template:
     metadata:
       labels:
-        app: django
+        app: django-api
     spec:
       containers:
         - image: juancamiloceron/django:v1
@@ -29,3 +29,7 @@ spec:
           ports:
             - containerPort: 8000
               name: django-gunicorn
+          resources:
+            limits:
+              memory: "256M"
+              cpu: "1000m"

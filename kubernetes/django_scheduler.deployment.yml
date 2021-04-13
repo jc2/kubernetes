@@ -3,16 +3,16 @@ kind: Deployment
 metadata:
   name: django-scheduler
   labels:
-    app: django
+    app: django-scheduler
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: django
+      app: django-scheduler
   template:
     metadata:
       labels:
-        app: django
+        app: django-scheduler
     spec:
       containers:
         - image: juancamiloceron/django:v1
@@ -26,3 +26,7 @@ spec:
               name: django-secret
           - configMapRef:
               name: django-config
+          resources:
+            limits:
+              memory: "256M"
+              cpu: "1000m"
