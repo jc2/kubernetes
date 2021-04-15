@@ -21,20 +21,41 @@
 - `docker-compose down`
 
 # Prepare Kubernetes in Azure
-Azure commands
+## Resouce Group
 - `az group create --name ResourceGroup --location eastus`
+
+## Container Registry
 - `az acr create --resource-group ResourceGroup --name jc2acr --sku Basic`
 - `docker tag juancamiloceron/django:v1 jc2acr.azurecr.io/django:v1.2`
 - `az acr login --name jc2acr`
 - `docker push jc2acr.azurecr.io/django:v1.2`
+
+## Azure K8s
 - `az aks create --resource-group ResourceGroup --name DjangoCluster --node-count 2 --generate-ssh-keys --attach-acr jc2acr`
+
+## Postgres
 - Create a Postgres DB with a firewall rule to allow 0.0.0.0
+
+## Redis
 - Create a Redis
 
-Change K8s context: 
+## Storage File
+- `az storage account create --name jc2storageaccount --resource-group ResourceGroup --location westus --sku Standard_LRS`
+- `export AZURE_STORAGE_CONNECTION_STRING=$(az storage account show-connection-string -n jc2storageaccount -g ResourceGroup -o tsv)`
+- `STORAGE_KEY=$(az storage account keys list --resource-group ResourceGroup --account-name jc2storageaccount --query "[0].value" -o tsv)`
+- `az storage share create -n djangovolume --connection-string $AZURE_STORAGE_CONNECTION_STRING`
+
+## Change K8s context: 
 - `az aks get-credentials --resource-group ResourceGroup --name DjangoCluster`
 
 # Run in Kubernetes
+- `kubectl create secret generic azure-volume-secret --from-literal=azurestorageaccountname=jc2storageaccount --from-literal=azurestorageaccountkey=$STORAGE_KEY`
+- `kubectl create configmap nginx-config --from-file=../config/nginx/default.conf`
+- `kubectl apply -f django_pv.yml`
+- `kubectl apply -f django_pvc.yml`
+- `kubectl apply -f django_cdn_deployment.yml`
+- `kubectl apply -f django_cdn_service.yml`
+
 - `kubectl apply -f django_configmap.yml`
 - `kubectl create secret generic django-secret --from-env-file=django_secrets`
 - `kubectl describe secret django-secret`
@@ -46,8 +67,9 @@ Change K8s context:
 - `kubectl get node -o wide`
 - `kubectl apply -f django_worker_deployment.yml`
 - `kubectl apply -f django_scheduler_deployment.yml`
-- `kubectl create configmap nginx-config --from-file=../config/nginx/default.conf`
------
+
+
+## Shortcuts
 - `kubectl apply -f .`
 - `kubectl delete all --all --namespace=default`
 
@@ -69,5 +91,8 @@ Change K8s context:
 - [x] Add Worker to K8s
 - [x] Add Scheduler to K8s
 - [ ] Add Nginx to K8s
+- [ ] Put secrets as YML files (get vars from env)
+- [ ] Implement Helm
+- [ ] Add terrform
 
 # BUGS
