@@ -14,10 +14,10 @@ spec:
       labels:
         app: django-api
     spec:
-      # volumes:
-      # - name: django-statics
-      #   persistentVolumeClaim:
-      #     claimName: django-statics
+      volumes:
+      - name: django-statics
+        persistentVolumeClaim:
+          claimName: django-storage-claim
 
       containers:
         - image: jc2acr.azurecr.io/django:v1.2
@@ -37,6 +37,6 @@ spec:
             limits:
               memory: "256M"
               cpu: "500m"
-          # volumeMounts:
-          #   - mountPath: /statics
-          #     name: django-statics
+          volumeMounts:
+            - mountPath: /static
+              name: django-statics

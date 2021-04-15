@@ -5,9 +5,9 @@ metadata:
   labels:
     app: django-cdn
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: django-cdn
   ports:
     - port: 8000
-      targetPort: 8000
+      # targetPort: 8000

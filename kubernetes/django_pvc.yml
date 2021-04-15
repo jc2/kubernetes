@@ -1,12 +1,15 @@
-apiVersion: v1
 kind: PersistentVolumeClaim
+apiVersion: v1
 metadata:
-  name: django-statics
+  name: django-storage-claim
+  annotations:
+    volume.beta.kubernetes.io/storage-class: ""
 spec:
+  accessModes:
+    - ReadWriteMany
   resources:
     requests:
-      storage: 20M
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: hostpath
+      storage: 10Gi
+  selector:
+    matchLabels:
+      usage: django-storage
