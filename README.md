@@ -1,3 +1,23 @@
+# Content
+- [Content](#content)
+- [Installation](#installation)
+- [Run in local](#run-in-local)
+- [Build Docker](#build-docker)
+- [Run in Docker Compose](#run-in-docker-compose)
+- [Prepare Kubernetes in Azure](#prepare-kubernetes-in-azure)
+  - [Resouce Group](#resouce-group)
+  - [Container Registry](#container-registry)
+  - [Azure K8s](#azure-k8s)
+  - [Postgres](#postgres)
+  - [Redis](#redis)
+  - [Storage File](#storage-file)
+  - [Change K8s context:](#change-k8s-context)
+- [Run in Kubernetes](#run-in-kubernetes)
+  - [Shortcuts](#shortcuts)
+- [Test](#test)
+- [TODO](#todo)
+- [BUGS](#bugs)
+
 # Installation
 - `sudo apt-get install libpq-dev python-dev`
 - `pip install -r requirements.txt`
