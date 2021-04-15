@@ -90,7 +90,7 @@
 - [x] Add env vars to docker env vars
 - [x] Add Worker to K8s
 - [x] Add Scheduler to K8s
-- [ ] Add Nginx to K8s
+- [x] Add Nginx to K8s
 - [ ] Put secrets as YML files (get vars from env)
 - [ ] Implement Helm
 - [ ] Add terrform
