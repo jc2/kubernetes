@@ -14,14 +14,13 @@ spec:
       labels:
         app: django-api
     spec:
-      volumes:
-      - name: django-statics
-        persistentVolumeClaim:
-          claimName: django-statics
+      # volumes:
+      # - name: django-statics
+      #   persistentVolumeClaim:
+      #     claimName: django-statics
 
       containers:
-        - image: juancamiloceron/django:v1
-          imagePullPolicy: Never
+        - image: jc2acr.azurecr.io/django:v1.2
           name: django-api
           env:
           - name: APP_MODE
@@ -37,7 +36,7 @@ spec:
           resources:
             limits:
               memory: "256M"
-              cpu: "1000m"
-          volumeMounts:
-            - mountPath: /statics
-              name: django-statics
+              cpu: "500m"
+          # volumeMounts:
+          #   - mountPath: /statics
+          #     name: django-statics

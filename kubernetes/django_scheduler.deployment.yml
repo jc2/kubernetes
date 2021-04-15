@@ -15,8 +15,7 @@ spec:
         app: django-scheduler
     spec:
       containers:
-        - image: juancamiloceron/django:v1
-          imagePullPolicy: Never
+        - image: jc2acr.azurecr.io/django:v1.2
           name: django-scheduler
           env:
           - name: APP_MODE
@@ -29,4 +28,4 @@ spec:
           resources:
             limits:
               memory: "256M"
-              cpu: "1000m"
+              cpu: "500m"
