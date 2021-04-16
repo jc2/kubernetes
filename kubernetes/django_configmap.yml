@@ -5,4 +5,4 @@ metadata:
 data:
   DEBUG: "True"
   DJANGO_ALLOWED_HOSTS: "*"
-  STATIC_HOST: "http://127.0.0.1:8080/static/"
+  STATIC_HOST: "http://localhost:31569/static/"

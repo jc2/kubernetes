@@ -37,6 +37,6 @@ spec:
             - mountPath: /etc/nginx/conf.d/
               name: nginx-config
               readOnly: true
-            - mountPath: /statics
+            - mountPath: /static
               name: django-statics
             

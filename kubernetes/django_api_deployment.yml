@@ -39,5 +39,5 @@ spec:
               memory: "256M"
               cpu: "1000m"
           volumeMounts:
-            - mountPath: /statics
+            - mountPath: /static
               name: django-statics
