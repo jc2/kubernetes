@@ -4,15 +4,21 @@
 - [Run in local](#run-in-local)
 - [Build Docker](#build-docker)
 - [Run in Docker Compose](#run-in-docker-compose)
-- [Prepare Kubernetes in Azure](#prepare-kubernetes-in-azure)
+- [Prepare Kubernetes in Azure with terraform](#prepare-kubernetes-in-azure-with-terraform)
+  - [Run terraform](#run-terraform)
+  - [Extra configurations](#extra-configurations)
+- [Prepare Kubernetes in Azure with CLI](#prepare-kubernetes-in-azure-with-cli)
+  - [Login](#login)
   - [Resouce Group](#resouce-group)
   - [Container Registry](#container-registry)
-  - [Azure K8s](#azure-k8s)
+  - [AKS](#aks)
   - [Postgres](#postgres)
   - [Redis](#redis)
   - [Storage File](#storage-file)
-  - [Change K8s context:](#change-k8s-context)
+- [Switch Azure context:](#switch-azure-context)
 - [Run in Kubernetes](#run-in-kubernetes)
+  - [Loading configs](#loading-configs)
+  - [Deploying](#deploying)
   - [Shortcuts](#shortcuts)
 - [Test](#test)
 - [TODO](#todo)
@@ -40,55 +46,60 @@
 - `docker-compose logs -f`
 - `docker-compose down`
 
-# Prepare Kubernetes in Azure
-## Resouce Group
-- `az group create --name ResourceGroup --location eastus`
-
-## Container Registry
-- `az acr create --resource-group ResourceGroup --name jc2acr --sku Basic`
+# Prepare Kubernetes in Azure with terraform
+## Run terraform
+- `az login`
+- `terraform init`
+- `terraform plan -var-file secrets.tfvars`
+- `terraform apply -var-file secrets.tfvars -auto-approve`
+- `terraform state pull | jq '.outputs.broker_password.value'`
+- `export STORAGE_KEY=$(terraform state pull | jq '.outputs.files_account_primary_key.value' | tr -d '"' )`
+## Extra configurations
+- `az aks get-credentials --resource-group k8s-group --name django-cluster`
 - `docker tag juancamiloceron/django:v1 jc2acr.azurecr.io/django:v1.2`
 - `az acr login --name jc2acr`
 - `docker push jc2acr.azurecr.io/django:v1.2`
 
-## Azure K8s
-- `az aks create --resource-group ResourceGroup --name DjangoCluster --node-count 2 --generate-ssh-keys --attach-acr jc2acr`
-
+# Prepare Kubernetes in Azure with CLI
+## Login
+- `az login`
+## Resouce Group
+- `az group create --name k8s-group --location eastus`
+## Container Registry
+- `az acr create --resource-group k8s-group --name jc2acr --sku Basic`
+- `docker tag juancamiloceron/django:v1 jc2acr.azurecr.io/django:v1.2`
+- `az acr login --name jc2acr`
+- `docker push jc2acr.azurecr.io/django:v1.2`
+## AKS
+- `az aks create --resource-group k8s-group --name django-cluster --node-count 2 --generate-ssh-keys --attach-acr jc2acr`
 ## Postgres
 - Create a Postgres DB with a firewall rule to allow 0.0.0.0
-
 ## Redis
 - Create a Redis
-
 ## Storage File
-- `az storage account create --name jc2storageaccount --resource-group ResourceGroup --location westus --sku Standard_LRS`
-- `export AZURE_STORAGE_CONNECTION_STRING=$(az storage account show-connection-string -n jc2storageaccount -g ResourceGroup -o tsv)`
-- `STORAGE_KEY=$(az storage account keys list --resource-group ResourceGroup --account-name jc2storageaccount --query "[0].value" -o tsv)`
+- `az storage account create --name jc2storageaccount --resource-group k8s-group --location westus --sku Standard_LRS`
+- `export AZURE_STORAGE_CONNECTION_STRING=$(az storage account show-connection-string -n jc2storageaccount -g k8s-group -o tsv)`
+- `export STORAGE_KEY=$(az storage account keys list --resource-group k8s-group --account-name jc2storageaccount --query "[0].value" -o tsv)`
 - `az storage share create -n djangovolume --connection-string $AZURE_STORAGE_CONNECTION_STRING`
 
-## Change K8s context: 
-- `az aks get-credentials --resource-group ResourceGroup --name DjangoCluster`
+# Switch Azure context: 
+- `az aks get-credentials --resource-group k8s-group --name django-cluster`
 
 # Run in Kubernetes
+## Loading configs
 - `kubectl create secret generic azure-volume-secret --from-literal=azurestorageaccountname=jc2storageaccount --from-literal=azurestorageaccountkey=$STORAGE_KEY`
 - `kubectl create configmap nginx-config --from-file=../config/nginx/default.conf`
+- `kubectl create secret generic django-secret --from-env-file=django_secrets`
+- `kubectl apply -f django_configmap.yml`
+## Deploying
 - `kubectl apply -f django_pv.yml`
 - `kubectl apply -f django_pvc.yml`
 - `kubectl apply -f django_cdn_deployment.yml`
 - `kubectl apply -f django_cdn_service.yml`
-
-- `kubectl apply -f django_configmap.yml`
-- `kubectl create secret generic django-secret --from-env-file=django_secrets`
-- `kubectl describe secret django-secret`
 - `kubectl apply -f django_api_deployment.yml`
-- `kubectl get deploy django-api`
-- `kubectl get pod`
 - `kubectl apply -f django_api_service.yml`
-- `kubectl get service django-api`
-- `kubectl get node -o wide`
 - `kubectl apply -f django_worker_deployment.yml`
 - `kubectl apply -f django_scheduler_deployment.yml`
-
-
 ## Shortcuts
 - `kubectl apply -f .`
 - `kubectl delete all --all --namespace=default`
@@ -108,11 +119,12 @@
 - [ ] Add admin to Something model
 - [ ] Improve collectstatic flow
 - [x] Add env vars to docker env vars
-- [x] Add Worker to K8s
-- [x] Add Scheduler to K8s
-- [x] Add Nginx to K8s
+- [x] Add Worker to K8s-group
+- [x] Add Scheduler to K8s-group
+- [x] Add Nginx to K8s-group
 - [ ] Put secrets as YML files (get vars from env)
 - [ ] Implement Helm
-- [ ] Add terrform
+- [x] Add terrform
+- [ ] Improve urls for cdn and api
 
 # BUGS

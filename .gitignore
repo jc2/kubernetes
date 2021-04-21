@@ -137,7 +137,9 @@ db.sqlite3
 *.tfstate
 *.backup
 .terraform/
-secret.tfvars
+.terraform*
+
+secrets.tfvars
 
 static/
 
