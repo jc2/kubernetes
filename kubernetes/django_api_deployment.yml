@@ -20,7 +20,7 @@ spec:
           claimName: django-storage-claim
 
       containers:
-        - image: jc2acr.azurecr.io/django:v1.2
+        - image: jc2acr.azurecr.io/django:uwsgi5
           name: django-api
           env:
           - name: APP_MODE

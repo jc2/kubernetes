@@ -3,6 +3,7 @@
 - [Installation](#installation)
 - [Run in local](#run-in-local)
 - [Build Docker](#build-docker)
+- [Run in Docker](#run-in-docker)
 - [Run in Docker Compose](#run-in-docker-compose)
 - [Prepare Kubernetes in Azure with terraform](#prepare-kubernetes-in-azure-with-terraform)
   - [Run terraform](#run-terraform)
@@ -39,6 +40,10 @@
 - `docker build -t juancamiloceron/django .` 
 - `docker tag juancamiloceron/django:latest juancamiloceron/django:v1`
 - `docker push juancamiloceron/django:v1`
+
+# Run in Docker
+- `docker run --name django-api --env-file .env -e APP_MODE=api -p 8000:8000 -d juancamiloceron/django:v1`
+- `docker exec -it django-api /bin/bash`
 
 # Run in Docker Compose
 - You need a Postgres and Redis with SSL 
