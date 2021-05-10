@@ -20,7 +20,7 @@ spec:
           claimName: django-statics
 
       containers:
-        - image: juancamiloceron/django:v1
+        - image: jc2acr.azurecr.io/django:gunircon_sync
           imagePullPolicy: Never
           name: django-api
           env:
