@@ -5,7 +5,7 @@ then
     echo "Running in api mode"
     python manage.py migrate 
     python manage.py collectstatic --noinput
-    gunicorn django_web.wsgi:application --bind 0.0.0.0:8000 
+    gunicorn django_web.wsgi:application --log-level=debug --bind 0.0.0.0:8000 --workers 2
 elif [[ $APP_MODE == "worker" ]]
 then
     echo "Running in worker mode";
