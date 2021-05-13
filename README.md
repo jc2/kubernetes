@@ -23,6 +23,7 @@
 - `kubectl apply -f django_configmap.yml`
 - `kubectl create secret generic django-secret --from-env-file=django_secrets`
 - `kubectl describe secret django-secret`
+- `kubectl apply -f django_pvc.yml`
 - `kubectl apply -f django_api_deployment.yml`
 - `kubectl get deploy django-api`
 - `kubectl get pod`

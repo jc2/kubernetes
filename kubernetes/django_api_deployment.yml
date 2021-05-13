@@ -20,9 +20,11 @@ spec:
           claimName: django-statics
 
       containers:
-        - image: jc2acr.azurecr.io/django:gunircon_sync
+        - image: jc2acr.azurecr.io/django:white
           imagePullPolicy: Never
           name: django-api
+          # command: ["/bin/bash", "-c"]
+          # args: ["python manage.py migrate && uwsgi --http 0.0.0.0:8000 --processes 1 --module django_web.wsgi:application"]
           env:
           - name: APP_MODE
             value: "api"
